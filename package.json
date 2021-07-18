@@ -1,0 +1,78 @@
+{
+    "name": "steam-workshop-toolbox",
+    "version": "1.0.0",
+    "description": "a chrome browser extension to help modders handle their workshop pages",
+    "author": "Fluffy <fluffy.l2032@gmail.com>",
+    "license": "MIT",
+    "scripts": {
+        "build:clean": "rm -rf dist/*",
+        "build:assets": "cp -ru assets/* dist/",
+        "build:bundle": "parcel build ./src/options.html ./src/content.tsx ./src/background.ts --no-source-maps",
+        "watch:assets": "sane \"npm run build:assets\" assets",
+        "watch:bundle": "parcel watch ./src/options.html ./src/content.tsx ./src/background.ts --no-hmr",
+        "watch:reload": "sane \"start http://reload.extensions\" dist --wait=1",
+        "build": "npm run build:clean && npm run build:assets && npm run build:bundle",
+        "serve": "concurrently -n assets,bundle -c #0F7173,#F45B69 \"npm run watch:assets\" \"npm run watch:bundle\""
+    },
+    "options": "dist/options.html",
+    "content": "dist/content.js",
+    "background": "dist/background.js",
+    "targets": {
+        "options": {
+            "source": "src/options.html",
+            "context": "browser",
+            "includeNodeModules": true,
+            "isLibrary": false
+        },
+        "content": {
+            "source": "src/content.tsx",
+            "context": "browser",
+            "includeNodeModules": true,
+            "isLibrary": false
+        },
+        "background": {
+            "source": "src/background.ts",
+            "context": "service-worker",
+            "includeNodeModules": true,
+            "isLibrary": false
+        }
+    },
+    "devDependencies": {
+        "@octokit/rest": "^18.6.7",
+        "@parcel/transformer-sass": "^2.0.0-nightly.769",
+        "@types/chroma-js": "^2.1.3",
+        "@types/lodash": "^4.14.171",
+        "@types/react": "^17.0.14",
+        "@types/react-dom": "^17.0.9",
+        "@types/react-select": "^4.0.17",
+        "@types/showdown": "^1.9.4",
+        "concurrently": "^6.2.0",
+        "sane": "^5.0.1",
+        "sass": "^1.35.2",
+        "typescript": "^4.3.5",
+        "webextension-polyfill-ts": "^0.26.0"
+    },
+    "dependencies": {
+        "bulma": "^0.9.3",
+        "chroma-js": "^2.1.2",
+        "classnames": "^2.3.1",
+        "clsx": "^1.1.1",
+        "handlebars": "^4.7.7",
+        "lodash": "^4.17.21",
+        "parcel": "^2.0.0-nightly.767",
+        "react": "^17.0.2",
+        "react-dom": "^17.0.2",
+        "react-icons": "^4.2.0",
+        "react-select": "^4.3.1",
+        "react-tooltip": "^4.2.21",
+        "showdown": "^1.9.1",
+        "toastify-js": "^1.11.0"
+    },
+    "browserslist": [
+        "last 3 and_chr versions",
+        "last 3 chrome versions",
+        "last 3 opera versions",
+        "last 3 ios_saf versions",
+        "last 3 safari versions"
+    ]
+}

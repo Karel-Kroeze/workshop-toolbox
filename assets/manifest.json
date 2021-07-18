@@ -1,0 +1,24 @@
+{
+    "name": "Steam Workshop Toolbox XXX",
+    "version": "0.3",
+    "description": "Create GitHub issues from Steam Workshop comments",
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": false
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://steamcommunity.com/sharedfiles/*"],
+            "js": ["content.js"],
+            "css": ["content.css"]
+        }
+    ],
+    "icons": {
+        "128": "icons/icon-128.png"
+    },
+    "options_page": "options.html",
+    "permissions": ["storage", "identity"],
+    "web_accessible_resources": ["icons/github-inv.png", "icons/reply.png"],
+    "manifest_version": 2,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApLWf+UFnTKaU9vttGp6WFyM2RSginjaz/GNN2mDMSHdGI/iG28ebAw2Rfl5+zeKyPKz+Io1KSGa4TtVSvIUp+MT6EIx8DCD5Qq2UdwFqSz/f+gNw7vjp90csHGh5QZiSXWVKkLl1AQGdaA57UzRQ2P7EZrnEmB/MxLgZN8ocL3RGK/YHLZfRiuxmAh4lbSzoZmAKa4NV81NpFDHHcWrUh0J+vK5BezQJMUQd9PGy/XnkJKcRkAW/cGYrDlSn39f0FihcNTpV8wsIQjXsYzb2HZEkC1D58dr3NllI0hYexRnKJ6MMcOLUde4QPyEBZdY36dcYbf2tuJCPZM6TlhXSjQIDAQAB"
+}

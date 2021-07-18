@@ -1,0 +1,56 @@
+@import "bulma";
+
+#options {
+    * {
+        box-sizing: border-box;
+    }
+    .hidden {
+        display: none;
+    }
+    .avatar {
+        border-radius: 50%;
+        max-height: 3em;
+        margin-right: 0.5em;
+        border: 2px solid white;
+    }
+
+    .user-container,
+    .user-details {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .content {
+        margin-top: 2em;
+        max-width: min(90vw, 800px) !important;
+    }
+
+    .default-repo-list {
+        .mod + .mod {
+            margin-top: 1em;
+        }
+        .label {
+            margin-bottom: 0.2em;
+        }
+        .row {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-start;
+            align-items: center;
+        }
+    }
+
+    .no-content {
+        color: lightgray;
+    }
+
+    .tooltip {
+        padding: 0.4em 0.6em !important;
+        border-radius: 4px;
+        box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+            0 0px 0 1px rgb(10 10 10 / 2%);
+        background-color: white;
+        opacity: 1;
+    }
+}

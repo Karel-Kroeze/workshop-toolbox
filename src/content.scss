@@ -1,0 +1,45 @@
+$family-sans-serif: "Roboto", sans-serif !important;
+$body-size: 14px;
+@import "components/create-issue-modal/RepoSelector.scss";
+
+.workshop-toolbox {
+    @import "bulma";
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .modal {
+        font-size: 14px;
+        font-family: $family-sans-serif;
+    }
+
+    &.tooltip,
+    .tooltip {
+        padding: 0.4em 0.6em !important;
+        border-radius: 4px;
+        box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+            0 0px 0 1px rgb(10 10 10 / 2%);
+        background-color: white;
+        opacity: 1;
+    }
+
+    kbd {
+        background-color: ghostwhite;
+        padding: 0 0.2em;
+        margin-right: 0.2em;
+        border-radius: 3px;
+        box-shadow: rgba(0, 0, 0, 0.6) 1px 1px 2px 1px;
+    }
+}
+
+.count-text {
+    text-align: right;
+    font-size: 70%;
+    color: grey;
+}
+
+.count-text.count-over {
+    font-weight: bold;
+    color: hsl(348, 86%, 61%);
+}

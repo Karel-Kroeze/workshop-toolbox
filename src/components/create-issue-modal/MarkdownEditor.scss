@@ -1,0 +1,25 @@
+.create-issue-modal {
+    .markdown-editor {
+        .tabs {
+            margin-bottom: 0 !important;
+            ul {
+                border-bottom: none;
+            }
+        }
+        textarea {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+        .preview {
+            border: 1px solid #cccccc;
+            background-color: #fafbfc;
+            border-radius: 0 0 4px 4px;
+            padding: 0.75em;
+
+            blockquote {
+                border-left: 4px solid #cccccc;
+                padding-left: 1em;
+            }
+        }
+    }
+}

@@ -1,0 +1,35 @@
+.reply-widget {
+    width: 250px;
+    max-width: 25vw;
+    height: 100px;
+    max-height: 15vw;
+
+    display: flex;
+    flex-flow: column nowrap;
+
+    .header {
+        flex: auto 0 0;
+        display: flex;
+        flex-flow: row nowrap;
+        justify-content: center;
+
+        .help {
+            font-weight: bold;
+            margin: 0;
+            margin-right: auto;
+        }
+
+        .icons {
+            & > * + * {
+                margin-left: 0.2em;
+            }
+            font-size: 16px;
+        }
+    }
+
+    .input {
+        flex: auto 1 1;
+        box-sizing: border-box;
+        resize: none;
+    }
+}

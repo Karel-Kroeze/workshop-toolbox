@@ -1,0 +1,5 @@
+.parcel-cache
+
+.yarn
+node_modules
+dist

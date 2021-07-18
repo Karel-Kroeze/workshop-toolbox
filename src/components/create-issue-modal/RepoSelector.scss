@@ -1,0 +1,20 @@
+.repo-option {
+    display: flex;
+    align-items: center;
+    color: rgb(54, 54, 54);
+    height: auto;
+
+    .repo {
+        margin-left: 0.5em;
+    }
+
+    .owner {
+        font-size: x-small;
+        font-style: italic;
+        color: grey;
+    }
+}
+
+#repo-selector {
+    margin-bottom: 1em;
+}

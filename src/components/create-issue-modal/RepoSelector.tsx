@@ -1,12 +1,12 @@
 import "./RepoSelector.scss";
 
-import React, { Component } from "react";
+import { Component } from "react";
 import { RiGitRepositoryLine } from "react-icons/ri";
 import Select, { FormatOptionLabelMeta, ValueType } from "react-select";
 import { browser } from "webextension-polyfill-ts";
 
 import { ACTIONS, IGetRepositoriesMessage, IRepository, IResponse } from "../../utils/types";
-import { toastWarning } from "../../utils/utils";
+import { toastResponse } from "../../utils/utils";
 
 interface RepoSelectorProps {
     repo?: IRepository;
@@ -19,7 +19,6 @@ interface RepoSelectorState {
     default?: IRepository;
 }
 
-console.log("bark!");
 export class RepoSelector extends Component<
     RepoSelectorProps,
     RepoSelectorState
@@ -55,7 +54,7 @@ export class RepoSelector extends Component<
             });
         } else {
             this.setState({ loading: false });
-            toastWarning(response.update.message);
+            toastResponse(response);
         }
     };
 

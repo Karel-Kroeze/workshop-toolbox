@@ -1,55 +1,40 @@
-import './content.scss';
-import 'toastify-js/src/toastify.css';
+import "./content.scss";
 
-import assign from 'lodash/assign';
-import React from 'react';
-import { createPortal, render, unmountComponentAtNode } from 'react-dom';
-import ReactTooltip from 'react-tooltip';
-import showdown from 'showdown';
-import { browser } from 'webextension-polyfill-ts';
+import { css } from "@emotion/react";
+import assign from "lodash/assign";
+import { createPortal, render, unmountComponentAtNode } from "react-dom";
+import { RiGithubFill } from "react-icons/ri";
+import { toast, ToastContainer } from "react-toastify";
+import ReactTooltip from "react-tooltip";
+import showdown from "showdown";
+import { browser } from "webextension-polyfill-ts";
 
-import { CreateIssueModal, CreateIssueModalState } from './components/create-issue-modal/CreateIssueModal';
-import { ReplyWidget } from './components/reply-widget/ReplyWidget';
-import { getModInfo, setModInfo } from './utils/storage';
-import { ACTIONS, ERRORS, IIssue, IMod, Message } from './utils/types';
-import { createIssueText, extractTitle, toastDanger, toastInfo } from './utils/utils';
+import { CreateIssueModal, CreateIssueModalState } from "./components/create-issue-modal/CreateIssueModal";
+import { ReplyWidget } from "./components/reply-widget/ReplyWidget";
+import { CreateCommentResponseData, CreateIssueResponseData } from "./utils/github";
+import { getModInfo, setModInfo } from "./utils/storage";
+import { ACTIONS, ERRORS, IIssue, IMod, IResponse, Message } from "./utils/types";
+import {
+    createIssueText,
+    extractTitle,
+    Toast,
+    toastContainerStyles,
+    toastDanger,
+    toastInfo,
+    toastLoading,
+    toastSuccess,
+} from "./utils/utils";
 
 showdown.setFlavor("github");
 export const markdown = new showdown.Converter();
 
-// get css together
 const MAX_CHARACTERS = 1000;
 
 let commentContainer: HTMLDivElement;
 let commentTextarea: HTMLTextAreaElement;
 let modalContainer: HTMLDivElement;
 let tooltipContainer: HTMLDivElement;
-const tooltipElement = (
-    <ReactTooltip
-        id="reply"
-        clickable={true}
-        event="click"
-        isCapture={true}
-        effect="solid"
-        type="light"
-        place="right"
-        className="workshop-toolbox tooltip"
-        afterHide={ReactTooltip.rebuild}
-        getContent={(content) => {
-            if (content) {
-                const { author, text } = JSON.parse(content);
-                return (
-                    <ReplyWidget
-                        {...{ author, text, mod }}
-                        onSubmit={replyHandler}
-                    />
-                );
-            } else {
-                return false;
-            }
-        }}
-    />
-);
+let toastContainer: HTMLDivElement;
 let mod: IMod;
 
 async function init() {
@@ -75,14 +60,6 @@ async function init() {
     mod = assign(await getModInfo(publishedFileId), { publishedFileId, name });
     setModInfo(mod);
 
-    // respond to changes in the comment container
-    new MutationObserver(createButtons).observe(commentContainer, {
-        childList: true,
-    });
-
-    // first run
-    createButtons();
-
     // add container for modals
     modalContainer = document.createElement("div");
     document.body.append(modalContainer);
@@ -90,7 +67,28 @@ async function init() {
     // add tooltip container
     tooltipContainer = document.createElement("div");
     document.body.append(tooltipContainer);
-    render(tooltipElement, tooltipContainer);
+    render(
+        <ReactTooltip
+            effect="solid"
+            type="light"
+            className="tooltip"
+            html
+            css={css`
+                padding: 0.4em 0.6em !important;
+                border-radius: 4px;
+                box-shadow: 0 0.5em 1em -0.125em rgb(10 10 10 / 10%),
+                    0 0px 0 1px rgb(10 10 10 / 2%);
+                background-color: white;
+                opacity: 1;
+            `}
+        />,
+        tooltipContainer
+    );
+
+    // add toast container
+    toastContainer = document.createElement("div");
+    document.body.append(toastContainer);
+    render(<ToastContainer css={toastContainerStyles} />, toastContainer);
 
     // add characterCounters
     // there are two textareas, for public and private comments
@@ -99,29 +97,74 @@ async function init() {
     )) {
         addCharacterCounter(entrybox);
     }
+
+    // respond to changes in the comment list (page changes)
+    new MutationObserver(injectContent).observe(commentContainer, {
+        childList: true,
+    });
+
+    // first run
+    injectContent();
+}
+
+function injectContent() {
+    createButtons();
+    fixSteamStyles();
+}
+
+function fixSteamStyles() {
+    for (const comment of document.querySelectorAll<HTMLDivElement>(
+        ".commentthread_comment"
+    )) {
+        comment.style.overflow = "unset";
+    }
+
+    for (const author of document.querySelectorAll<HTMLDivElement>(
+        ".commentthread_comment_author"
+    )) {
+        author.style.display = "flex";
+        author.style.height = "1rem";
+        author.style.alignContent = "flex-start";
+        author.style.marginBottom = "0.3rem";
+    }
+    for (const action of document.querySelectorAll<HTMLDivElement>(
+        ".commentthread_comment_actions"
+    )) {
+        action.style.float = "none";
+        action.style.marginLeft = "auto";
+    }
 }
 
 function createButtons() {
     const comments = document.getElementsByClassName("commentthread_comment");
     for (const comment of comments) {
-        const author = comment
-            .getElementsByClassName("commentthread_author_link")
-            .item(0)!
-            .textContent!.trim();
-        const html = comment
-            .getElementsByClassName("commentthread_comment_text")
-            .item(0)!
-            .innerHTML.trim();
-        const actions = comment
-            .getElementsByClassName("commentthread_comment_actions")
-            .item(0)!;
+        const contentContainer = comment.querySelector<HTMLDivElement>(
+            ".commentthread_comment_content"
+        );
+        if (!contentContainer) continue;
+        const actionsContainer = contentContainer.querySelector<HTMLDivElement>(
+            ".commentthread_comment_actions"
+        );
+        if (!actionsContainer) continue;
 
-        actions.insertAdjacentElement(
+        const author =
+            contentContainer
+                .querySelector(".commentthread_author_link")
+                ?.textContent?.trim() ?? "";
+        const quote =
+            contentContainer
+                .querySelector(".commentthread_comment_text")
+                ?.textContent?.trim() ?? "";
+
+        actionsContainer.insertAdjacentElement(
             "afterbegin",
-            createIssueButton(author, html)
+            createIssueButton(author, quote)
         );
 
-        actions.insertAdjacentElement("afterbegin", createReplyButton(author));
+        actionsContainer.insertAdjacentElement(
+            "afterbegin",
+            createReplyButton(author, contentContainer)
+        );
     }
 
     // rebind tooltips
@@ -186,6 +229,37 @@ function createIssueHandler(author: string, html: string): () => Promise<void> {
                     mod,
                     issue,
                 };
+                const feedbackToast = toastLoading("creating issue...");
+                const response: IResponse<CreateIssueResponseData> =
+                    await browser.runtime.sendMessage(message);
+                if (response.success) {
+                    toast.update(feedbackToast, {
+                        autoClose: 2000,
+                        className: "toast-success",
+                        render: (
+                            <Toast
+                                message={`Issue '${response.content.title}' (#${response.content.number}) created.`}
+                                Icon={RiGithubFill}
+                            />
+                        ),
+                        onClick: () => {
+                            open(response.content.html_url, "_blank");
+                        },
+                        hideProgressBar: false,
+                    });
+                } else {
+                    toast.update(feedbackToast, {
+                        autoClose: 5000,
+                        className: `toast-${response.update.status}`,
+                        render: (
+                            <Toast
+                                message={`Issue creation failed: ${response.update.message}`}
+                                Icon={RiGithubFill}
+                            />
+                        ),
+                        hideProgressBar: false,
+                    });
+                }
             } else {
                 message = {
                     action: ACTIONS.ADD_ISSUE_COMMENT,
@@ -193,10 +267,38 @@ function createIssueHandler(author: string, html: string): () => Promise<void> {
                     issue,
                     target,
                 };
+                const feedbackToast = toastLoading("posting comment...");
+                const response: IResponse<CreateCommentResponseData> =
+                    await browser.runtime.sendMessage(message);
+                if (response.success) {
+                    toast.update(feedbackToast, {
+                        autoClose: 2000,
+                        className: "toast-success",
+                        render: (
+                            <Toast
+                                message={`Comment posted.`}
+                                Icon={RiGithubFill}
+                            />
+                        ),
+                        onClick: () => {
+                            open(response.content.html_url, "_blank");
+                        },
+                        hideProgressBar: false,
+                    });
+                } else {
+                    toast.update(feedbackToast, {
+                        autoClose: 5000,
+                        className: `toast-${response.update.status}`,
+                        render: (
+                            <Toast
+                                message={`Posting comment failed: ${response.update.message}`}
+                                Icon={RiGithubFill}
+                            />
+                        ),
+                        hideProgressBar: false,
+                    });
+                }
             }
-            await new Promise((resolve) =>
-                browser.runtime.sendMessage(message, resolve)
-            );
         } catch (err) {
             if (err == ERRORS.USER_CANCELED_ISSUE) {
                 toastInfo(`${err}`);
@@ -231,31 +333,70 @@ async function queryUserCreateIssue(mod: IMod, issue: IIssue) {
  *
  * @param {string} author steam user name of reply-ee
  */
-function createReplyButton(author: string) {
+function createReplyButton(author: string, contentContainer: HTMLDivElement) {
     const button = document.createElement("a");
     button.classList.add("actionlink");
     button.dataset.tooltipText = "Reply";
-    button.dataset.tip = JSON.stringify({ author, text: "" });
-    button.dataset.for = "reply";
-    button.dataset.event = "click";
+    button.onclick = createReplyHandler(author, contentContainer);
     button.innerHTML = `<img src="${browser.runtime.getURL(
         "icons/reply.png"
     )}" />`;
     return button;
 }
 
+let currentReplyContainer: HTMLDivElement | null = null;
+function createReplyHandler(author: string, container: HTMLDivElement) {
+    return () => {
+        // if we're already replying to someone, close the reply
+        if (currentReplyContainer) {
+            unmountComponentAtNode(currentReplyContainer);
+            currentReplyContainer.remove();
+        }
+
+        // create a new reply container
+        const target = document.createElement("div");
+        currentReplyContainer = target;
+        container.appendChild(target);
+
+        // provide a cleanup function
+        const destroyWidget = () => {
+            unmountComponentAtNode(target);
+            container.removeChild(target);
+            if (currentReplyContainer === target) {
+                currentReplyContainer = null;
+            }
+        };
+
+        const cancelReply = () => {
+            toastInfo("reply cancelled");
+            destroyWidget();
+        };
+
+        // do the thing
+        render(
+            <ReplyWidget
+                {...{ author, mod }}
+                onSubmit={replyHandler}
+                onCancel={cancelReply}
+            />,
+            target
+        );
+        ReactTooltip.rebuild();
+    };
+}
+
 async function replyHandler(
-    user: string,
     text: string,
     focus: boolean = false
 ): Promise<void> {
     if (commentTextarea.value && !commentTextarea.value.endsWith("\n"))
         commentTextarea.value += "\n";
-    commentTextarea.value += `[b]@${user}:[/b] ${text}`;
+    commentTextarea.value += text;
     commentTextarea.blur();
     if (focus) {
         commentTextarea.focus();
     }
+    toastSuccess("Reply Added");
 }
 
 function addCharacterCounter(entrybox: HTMLElement) {

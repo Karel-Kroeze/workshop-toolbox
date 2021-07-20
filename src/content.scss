@@ -1,6 +1,7 @@
 $family-sans-serif: "Roboto", sans-serif !important;
 $body-size: 14px;
 @import "components/create-issue-modal/RepoSelector.scss";
+@import "react-toastify/scss/main";
 
 .workshop-toolbox {
     @import "bulma";

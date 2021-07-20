@@ -1,11 +1,11 @@
-import React, { Component } from 'react';
-import { browser } from 'webextension-polyfill-ts';
+import { Component } from "react";
+import { browser } from "webextension-polyfill-ts";
 
-import { CLIENT_ID } from '../../utils/config';
-import { clearGitHubUser, getGithubUser } from '../../utils/storage';
-import { ACTIONS, IGithubUser, IResponse } from '../../utils/types';
-import { toastDanger, toastInfo, toastWarning } from '../../utils/utils';
-import UserInfo from './UserInfo';
+import { CLIENT_ID } from "../../utils/config";
+import { clearGitHubUser, getGithubUser } from "../../utils/storage";
+import { ACTIONS, IGithubUser, IResponse } from "../../utils/types";
+import { toastDanger, toastInfo, toastWarning } from "../../utils/utils";
+import UserInfo from "./UserInfo";
 
 interface IUserState {
     user?: IGithubUser;

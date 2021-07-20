@@ -1,23 +1,17 @@
-import './options.scss';
-import 'toastify-js/src/toastify.css';
+import "./options.scss";
+import "react-toastify/dist/ReactToastify.css";
 
-import React from 'react';
-import { render } from 'react-dom';
-import ReactTooltip from 'react-tooltip';
+import { render } from "react-dom";
+import { ToastContainer } from "react-toastify";
+import ReactTooltip from "react-tooltip";
 
-import { ModList } from './components/options/ModList';
-import { QuickReplyOptions } from './components/options/QuickReplies';
-import { User } from './components/options/User';
+import { ModList } from "./components/options/ModList";
+import { QuickReplyOptions } from "./components/options/QuickReplies";
+import { User } from "./components/options/User";
+import { toastContainerStyles } from "./utils/utils";
 
 const Options = () => (
     <div className="container content">
-        <ReactTooltip
-            id="options-tooltip"
-            type="light"
-            effect="solid"
-            html
-            className="workshop-toolbox tooltip"
-        />
         <div className="box">
             <User />
         </div>
@@ -27,6 +21,14 @@ const Options = () => (
         <div className="box">
             <QuickReplyOptions />
         </div>
+        <ReactTooltip
+            id="options-tooltip"
+            type="light"
+            effect="solid"
+            html
+            className="workshop-toolbox tooltip"
+        />
+        <ToastContainer css={toastContainerStyles} />
     </div>
 );
 render(<Options />, document.getElementById("options"));

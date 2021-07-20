@@ -1,13 +1,13 @@
-import cx from 'classnames';
-import React, { Component } from 'react';
-import { BiLink, BiTrash, BiUnlink } from 'react-icons/bi';
-import { RiGithubFill, RiSteamFill } from 'react-icons/ri';
-import { browser } from 'webextension-polyfill-ts';
+import cx from "classnames";
+import { Component } from "react";
+import { BiLink, BiTrash, BiUnlink } from "react-icons/bi";
+import { RiGithubFill, RiSteamFill } from "react-icons/ri";
+import { browser } from "webextension-polyfill-ts";
 
-import { clearModInfo, getAllModInfo, setModInfo } from '../../utils/storage';
-import { ACTIONS, IMod, IRepository, IResponse } from '../../utils/types';
-import { toastDanger } from '../../utils/utils';
-import { RepoSelector } from '../create-issue-modal/RepoSelector';
+import { clearModInfo, getAllModInfo, setModInfo } from "../../utils/storage";
+import { ACTIONS, IMod, IRepository, IResponse } from "../../utils/types";
+import { toastDanger } from "../../utils/utils";
+import { RepoSelector } from "../create-issue-modal/RepoSelector";
 
 interface ModListState {
     mods: IMod[];

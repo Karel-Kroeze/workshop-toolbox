@@ -1,7 +1,7 @@
-import { Octokit, RestEndpointMethodTypes } from '@octokit/rest';
-import { xorWith } from 'lodash';
+import { Octokit, RestEndpointMethodTypes } from "@octokit/rest";
+import { xorWith } from "lodash";
 
-import { getGithubUser } from './storage';
+import { getGithubUser } from "./storage";
 import {
     ERRORS,
     IAddIssueCommentMessage,
@@ -15,7 +15,7 @@ import {
     IRepository,
     IResponse,
     RESPONSE_ACTIONS,
-} from './types';
+} from "./types";
 
 export async function getBearerInfo(token: string): Promise<IGithubUser> {
     const octo = new Octokit({
@@ -26,11 +26,11 @@ export async function getBearerInfo(token: string): Promise<IGithubUser> {
     return { user, avatar, token };
 }
 
+export type CreateIssueResponseData =
+    RestEndpointMethodTypes["issues"]["create"]["response"]["data"];
 export async function createIssue(
     message: ICreateIssueMessage
-): Promise<
-    IResponse<RestEndpointMethodTypes["issues"]["create"]["response"]["data"]>
-> {
+): Promise<IResponse<CreateIssueResponseData>> {
     try {
         const user = await getGithubUser();
         if (!user) throw ERRORS.GITHUB_USER_NOT_SET;
@@ -69,13 +69,11 @@ export async function createIssue(
     }
 }
 
+export type CreateCommentResponseData =
+    RestEndpointMethodTypes["issues"]["createComment"]["response"]["data"];
 export async function addIssueComment(
     message: IAddIssueCommentMessage
-): Promise<
-    IResponse<
-        RestEndpointMethodTypes["issues"]["createComment"]["response"]["data"]
-    >
-> {
+): Promise<IResponse<CreateCommentResponseData>> {
     try {
         const user = await getGithubUser();
         if (!user) throw ERRORS.GITHUB_USER_NOT_SET;
@@ -91,12 +89,12 @@ export async function addIssueComment(
         const updateLabels = xorWith(
             issue.labels,
             target.labels,
-            (a, b) => a.name === b.name
+            (a, b) => a.name.toLowerCase() === b.name.toLowerCase()
         ).length;
         if (updateLabels) {
             await octo.issues.update({
                 ...mod.github,
-                issue_number: issue.id!,
+                issue_number: target.id!,
                 labels: issue.labels.map((l) => l.name),
             });
         }
@@ -122,6 +120,7 @@ export async function addIssueComment(
             },
         };
     } catch (err) {
+        console.error({ err, message });
         let action: RESPONSE_ACTIONS | undefined;
         if (err == ERRORS.GITHUB_USER_NOT_SET || err == ERRORS.UNKNOWN_REPO)
             action = RESPONSE_ACTIONS.OPEN_OPTIONS;

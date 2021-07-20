@@ -1,8 +1,8 @@
-import './MarkdownEditor.scss';
+import "./MarkdownEditor.scss";
 
-import React, { Component } from 'react';
+import { Component } from "react";
 
-import { markdown } from '../../content';
+import { markdown } from "../../content";
 
 interface MarkdownEditorProps {
     value: string;

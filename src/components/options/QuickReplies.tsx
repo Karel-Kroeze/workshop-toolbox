@@ -1,15 +1,15 @@
-import cx from 'clsx';
-import { omit } from 'lodash';
-import React, { FormEvent, PropsWithChildren, ReactElement } from 'react';
-import { cloneElement } from 'react';
-import { useState } from 'react';
-import { BiEdit, BiTrash } from 'react-icons/bi';
-import { RiQuestionLine } from 'react-icons/ri';
-import ReactTooltip from 'react-tooltip';
+import cx from "clsx";
+import { omit } from "lodash";
+import { FormEvent, PropsWithChildren, ReactElement } from "react";
+import { cloneElement } from "react";
+import { useState } from "react";
+import { BiEdit, BiTrash } from "react-icons/bi";
+import { RiQuestionLine } from "react-icons/ri";
+import ReactTooltip from "react-tooltip";
 
-import { deleteQuickReply, getQuickReplies, setQuickReply } from '../../utils/storage';
-import { IQuickReply } from '../../utils/types';
-import { toastWarning } from '../../utils/utils';
+import { deleteQuickReply, getQuickReplies, setQuickReply } from "../../utils/storage";
+import { IQuickReply } from "../../utils/types";
+import { toastWarning } from "../../utils/utils";
 
 export const QuickReplyOptions = () => {
     const [replies, setReplies] = useState<IQuickReply[]>([]);

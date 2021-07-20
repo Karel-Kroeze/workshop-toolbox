@@ -1,10 +1,10 @@
-import './DefaultRepoSetter.scss';
+import "./DefaultRepoSetter.scss";
 
-import { isEqual } from 'lodash';
-import React, { Component } from 'react';
-import { RiStarFill, RiStarLine } from 'react-icons/ri';
+import { isEqual } from "lodash";
+import { Component } from "react";
+import { RiStarFill, RiStarLine } from "react-icons/ri";
 
-import { IMod, IRepository } from '../../utils/types';
+import { IMod, IRepository } from "../../utils/types";
 
 interface DefaultRepoIconProps {
     mod: IMod;

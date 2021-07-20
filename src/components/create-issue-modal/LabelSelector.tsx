@@ -1,13 +1,13 @@
-import './LabelSelector.scss';
+import "./LabelSelector.scss";
 
-import chroma from 'chroma-js';
-import isEqual from 'lodash/isEqual';
-import React, { Component } from 'react';
-import Select from 'react-select';
-import { browser } from 'webextension-polyfill-ts';
+import chroma from "chroma-js";
+import isEqual from "lodash/isEqual";
+import { Component } from "react";
+import Select from "react-select";
+import { browser } from "webextension-polyfill-ts";
 
-import { ACTIONS, IGetRepoLabelsMessage, IIssue, ILabel, IRepository, IResponse } from '../../utils/types';
-import { textColour, toastWarning } from '../../utils/utils';
+import { ACTIONS, IGetRepoLabelsMessage, IIssue, ILabel, IRepository, IResponse } from "../../utils/types";
+import { textColour, toastResponse } from "../../utils/utils";
 
 interface LabelSelectorProps {
     repo: IRepository;
@@ -62,7 +62,7 @@ export class LabelSelector extends Component<
             this.setState({ labels: response.content, loading: false });
         } else {
             this.setState({ loading: false });
-            toastWarning(response.update.message);
+            toastResponse(response);
         }
     };
 

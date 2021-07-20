@@ -1,10 +1,10 @@
-import './IssueForm.scss';
+import "./IssueForm.scss";
 
-import React, { Component } from 'react';
+import { Component } from "react";
 
-import { IIssue, ILabel, IRepository } from '../../utils/types';
-import { LabelSelector } from './LabelSelector';
-import { MarkDownEditor as MarkdownEditor } from './MarkdownEditor';
+import { IIssue, ILabel, IRepository } from "../../utils/types";
+import { LabelSelector } from "./LabelSelector";
+import { MarkDownEditor as MarkdownEditor } from "./MarkdownEditor";
 
 interface IssueFormProps {
     issue: IIssue;

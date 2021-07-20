@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import { Component } from "react";
 
-import { IGithubUser } from '../../utils/types';
+import { IGithubUser } from "../../utils/types";
 
 interface UserInfoProps {
     user: IGithubUser;

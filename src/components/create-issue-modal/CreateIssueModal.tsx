@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import { Component } from "react";
 
 import { getModInfo, setModInfo } from "../../utils/storage";
 import { ERRORS, IIssue, IMod, IRepository } from "../../utils/types";

@@ -5,8 +5,8 @@ import { RiGitRepositoryLine } from "react-icons/ri";
 import Select, { FormatOptionLabelMeta, ValueType } from "react-select";
 import { browser } from "webextension-polyfill-ts";
 
+import { toastResponse } from "../../utils/toasts";
 import { ACTIONS, IGetRepositoriesMessage, IRepository, IResponse } from "../../utils/types";
-import { toastResponse } from "../../utils/utils";
 
 interface RepoSelectorProps {
     repo?: IRepository;

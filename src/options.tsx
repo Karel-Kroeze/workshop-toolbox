@@ -8,7 +8,7 @@ import ReactTooltip from "react-tooltip";
 import { ModList } from "./components/options/ModList";
 import { QuickReplyOptions } from "./components/options/QuickReplies";
 import { User } from "./components/options/User";
-import { toastContainerStyles } from "./utils/utils";
+import { toastContainerStyles } from "./utils/toasts";
 
 const Options = () => (
     <div className="container content">

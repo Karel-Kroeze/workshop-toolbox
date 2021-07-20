@@ -6,8 +6,9 @@ import { Component } from "react";
 import Select from "react-select";
 import { browser } from "webextension-polyfill-ts";
 
+import { toastResponse } from "../../utils/toasts";
 import { ACTIONS, IGetRepoLabelsMessage, IIssue, ILabel, IRepository, IResponse } from "../../utils/types";
-import { textColour, toastResponse } from "../../utils/utils";
+import { textColour } from "../../utils/utils";
 
 interface LabelSelectorProps {
     repo: IRepository;

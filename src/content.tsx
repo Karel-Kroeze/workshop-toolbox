@@ -4,7 +4,7 @@ import { css } from "@emotion/react";
 import assign from "lodash/assign";
 import { createPortal, render, unmountComponentAtNode } from "react-dom";
 import { RiGithubFill } from "react-icons/ri";
-import { toast, ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import ReactTooltip from "react-tooltip";
 import showdown from "showdown";
 import { browser } from "webextension-polyfill-ts";
@@ -13,17 +13,9 @@ import { CreateIssueModal, CreateIssueModalState } from "./components/create-iss
 import { ReplyWidget } from "./components/reply-widget/ReplyWidget";
 import { CreateCommentResponseData, CreateIssueResponseData } from "./utils/github";
 import { getModInfo, setModInfo } from "./utils/storage";
+import { toastContainerStyles, toastDanger, toastInfo, toastLoading, toastSuccess } from "./utils/toasts";
 import { ACTIONS, ERRORS, IIssue, IMod, IResponse, Message } from "./utils/types";
-import {
-    createIssueText,
-    extractTitle,
-    Toast,
-    toastContainerStyles,
-    toastDanger,
-    toastInfo,
-    toastLoading,
-    toastSuccess,
-} from "./utils/utils";
+import { createIssueText, extractTitle } from "./utils/utils";
 
 showdown.setFlavor("github");
 export const markdown = new showdown.Converter();
@@ -233,32 +225,20 @@ function createIssueHandler(author: string, html: string): () => Promise<void> {
                 const response: IResponse<CreateIssueResponseData> =
                     await browser.runtime.sendMessage(message);
                 if (response.success) {
-                    toast.update(feedbackToast, {
-                        autoClose: 2000,
-                        className: "toast-success",
-                        render: (
-                            <Toast
-                                message={`Issue '${response.content.title}' (#${response.content.number}) created.`}
-                                Icon={RiGithubFill}
-                            />
-                        ),
-                        onClick: () => {
-                            open(response.content.html_url, "_blank");
-                        },
-                        hideProgressBar: false,
-                    });
+                    feedbackToast.success(
+                        `Issue '${response.content.title}' (#${response.content.number}) created.`,
+                        RiGithubFill,
+                        {
+                            onClick: () => {
+                                open(response.content.html_url, "_blank");
+                            },
+                        }
+                    );
                 } else {
-                    toast.update(feedbackToast, {
-                        autoClose: 5000,
-                        className: `toast-${response.update.status}`,
-                        render: (
-                            <Toast
-                                message={`Issue creation failed: ${response.update.message}`}
-                                Icon={RiGithubFill}
-                            />
-                        ),
-                        hideProgressBar: false,
-                    });
+                    feedbackToast.failure(
+                        `Issue creation failed: ${response.update.message}`,
+                        RiGithubFill
+                    );
                 }
             } else {
                 message = {
@@ -271,32 +251,16 @@ function createIssueHandler(author: string, html: string): () => Promise<void> {
                 const response: IResponse<CreateCommentResponseData> =
                     await browser.runtime.sendMessage(message);
                 if (response.success) {
-                    toast.update(feedbackToast, {
-                        autoClose: 2000,
-                        className: "toast-success",
-                        render: (
-                            <Toast
-                                message={`Comment posted.`}
-                                Icon={RiGithubFill}
-                            />
-                        ),
+                    feedbackToast.success(`Comment posted.`, RiGithubFill, {
                         onClick: () => {
                             open(response.content.html_url, "_blank");
                         },
-                        hideProgressBar: false,
                     });
                 } else {
-                    toast.update(feedbackToast, {
-                        autoClose: 5000,
-                        className: `toast-${response.update.status}`,
-                        render: (
-                            <Toast
-                                message={`Posting comment failed: ${response.update.message}`}
-                                Icon={RiGithubFill}
-                            />
-                        ),
-                        hideProgressBar: false,
-                    });
+                    feedbackToast.failure(
+                        `Posting comment failed: ${response.update.message}`,
+                        RiGithubFill
+                    );
                 }
             }
         } catch (err) {

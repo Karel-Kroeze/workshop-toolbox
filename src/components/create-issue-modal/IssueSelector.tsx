@@ -7,8 +7,9 @@ import { RiBug2Line, RiDiscussLine } from "react-icons/ri";
 import Select from "react-select";
 import { browser } from "webextension-polyfill-ts";
 
+import { toastResponse } from "../../utils/toasts";
 import { ACTIONS, IGetIssuesMessage, IIssue, IRepository, IResponse } from "../../utils/types";
-import { textColour, toastResponse } from "../../utils/utils";
+import { textColour } from "../../utils/utils";
 
 interface IssueSelectorProps {
     repo: IRepository;

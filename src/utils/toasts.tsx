@@ -1,41 +1,12 @@
 import { css } from "@emotion/react";
-import chroma, { rgb } from "chroma-js";
 import { ReactElement } from "react";
 import { IconType } from "react-icons";
 import { RiAlertFill, RiCheckFill, RiErrorWarningFill, RiInformationFill, RiLoaderLine } from "react-icons/ri";
 import { toast, ToastOptions } from "react-toastify";
 import { browser } from "webextension-polyfill-ts";
 
-import { ACTIONS, IResponse, RESPONSE_ACTIONS, Status } from "./types";
-
-export function extractTitle(body: string): string {
-    return body.split("\n")[0];
-}
-
-export function createIssueText({
-    body,
-    author,
-    source,
-}: {
-    body: string;
-    author: string;
-    source?: string;
-}): string {
-    let text: string = `**reported by:**  \n${author}\n\n`;
-    if (source) text += `**source:**  \n${source}\n\n`;
-    text += `**description:**  \n${body
-        .split("\n")
-        .map((l) => "> " + l)
-        .join("\n")}`;
-    return text;
-}
-
-export const statusColors: Record<Status, string> = {
-    info: "#4fc3f7",
-    success: "#7ac74f",
-    danger: "#f24236",
-    warning: "#ffe74c",
-};
+import { ACTIONS, IResponse, RESPONSE_ACTIONS } from "./types";
+import { statusColors } from "./utils";
 
 const defaultToastOptions: ToastOptions = {
     position: "bottom-right",
@@ -102,14 +73,47 @@ export const Toast = ({
 
 export function toastLoading(
     message: string | ReactElement,
-    Icon: IconType = RiLoaderLine
+    Icon: IconType = RiLoaderLine,
+    options?: ToastOptions
 ) {
-    return toast.dark(<Toast message={message} Icon={Icon} />, {
+    const _toast = toast.dark(<Toast message={message} Icon={Icon} />, {
         ...defaultToastOptions,
         autoClose: false,
         hideProgressBar: true,
         className: "toast toast-info toast-loading",
+        ...options,
     });
+
+    return {
+        success: (
+            message: string | ReactElement,
+            Icon: IconType = RiCheckFill,
+            options?: ToastOptions
+        ) => {
+            toast.update(_toast, {
+                render: <Toast message={message} Icon={Icon} />,
+                className: "toast toast-success",
+                autoClose: 2000,
+                hideProgressBar: false,
+                ...options,
+            });
+        },
+        failure: (
+            message: string | ReactElement,
+            Icon: IconType = RiErrorWarningFill
+        ) => {
+            toast.update(_toast, {
+                render: <Toast message={message} Icon={Icon} />,
+                className: "toast toast-danger",
+                autoClose: 5000,
+                hideProgressBar: false,
+                ...options,
+            });
+        },
+        cancel: () => {
+            toast.dismiss(_toast);
+        },
+    };
 }
 
 export function toastResponse(response: IResponse) {
@@ -222,13 +226,4 @@ export function toastWarning(
         autoClose: 5000,
         className: "toast toast-warning",
     });
-}
-
-export function textColour(color: chroma.Color) {
-    const white = chroma("#fff");
-    if (chroma.contrast(white, color) >= 2) {
-        return white;
-    } else {
-        return rgb(45, 45, 45);
-    }
 }

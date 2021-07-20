@@ -8,8 +8,8 @@ import { RiQuestionLine } from "react-icons/ri";
 
 import { getQuickReplies } from "../../utils/storage";
 import { renderQuickReply } from "../../utils/template";
+import { toastDanger } from "../../utils/toasts";
 import { IMod, IQuickReply } from "../../utils/types";
-import { toastDanger } from "../../utils/utils";
 import { QuickReplyDropdown } from "./QuickReplyDropdown";
 
 interface ReplyWidgetProps {

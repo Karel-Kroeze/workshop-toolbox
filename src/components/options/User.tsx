@@ -3,8 +3,8 @@ import { browser } from "webextension-polyfill-ts";
 
 import { CLIENT_ID } from "../../utils/config";
 import { clearGitHubUser, getGithubUser } from "../../utils/storage";
+import { toastDanger, toastInfo, toastWarning } from "../../utils/toasts";
 import { ACTIONS, IGithubUser, IResponse } from "../../utils/types";
-import { toastDanger, toastInfo, toastWarning } from "../../utils/utils";
 import UserInfo from "./UserInfo";
 
 interface IUserState {

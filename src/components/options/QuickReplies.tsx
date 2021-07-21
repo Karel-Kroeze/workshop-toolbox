@@ -8,8 +8,8 @@ import { RiQuestionLine } from "react-icons/ri";
 import ReactTooltip from "react-tooltip";
 
 import { deleteQuickReply, getQuickReplies, setQuickReply } from "../../utils/storage";
+import { toastWarning } from "../../utils/toasts";
 import { IQuickReply } from "../../utils/types";
-import { toastWarning } from "../../utils/utils";
 
 export const QuickReplyOptions = () => {
     const [replies, setReplies] = useState<IQuickReply[]>([]);

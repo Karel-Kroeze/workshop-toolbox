@@ -105,7 +105,7 @@ export const ReplyWidget = (
         const mod = props.mod.name;
         const author = props.author;
         const repo = props.mod.github?.repo
-            ? `${props.mod.github?.repo}/${props.mod.github?.repo}`
+            ? `${props.mod.github?.owner}/${props.mod.github?.repo}`
             : undefined;
         const reply = renderQuickReply(quickReply, { mod, repo, author });
         if (text !== "") {

@@ -336,31 +336,26 @@ function createReplyHandler(author: string, container: HTMLDivElement) {
             destroyWidget();
         };
 
+        const createReply = async (text: string) => {
+            if (commentTextarea.value && !commentTextarea.value.endsWith("\n"))
+                commentTextarea.value += "\n";
+            commentTextarea.value += text;
+            commentTextarea.blur();
+            toastSuccess("Reply Added");
+            destroyWidget();
+        };
+
         // do the thing
         render(
             <ReplyWidget
                 {...{ author, mod }}
-                onSubmit={replyHandler}
+                onSubmit={createReply}
                 onCancel={cancelReply}
             />,
             target
         );
         ReactTooltip.rebuild();
     };
-}
-
-async function replyHandler(
-    text: string,
-    focus: boolean = false
-): Promise<void> {
-    if (commentTextarea.value && !commentTextarea.value.endsWith("\n"))
-        commentTextarea.value += "\n";
-    commentTextarea.value += text;
-    commentTextarea.blur();
-    if (focus) {
-        commentTextarea.focus();
-    }
-    toastSuccess("Reply Added");
 }
 
 function addCharacterCounter(entrybox: HTMLElement) {

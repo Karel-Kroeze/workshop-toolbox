@@ -84,9 +84,10 @@ export const ReplyWidget = (
         getQuickReplies().then(setQuickReplies).catch(toastDanger);
     }, []);
 
-    // clear author and text when author changes
+    // clear author and text, then focus input when author changes
     useEffect(() => {
         setText(`[b]@${props.author}:[/b] ${props.text ?? ""}`);
+        focusInput();
     }, [props.author]);
 
     const focusInput = () => {

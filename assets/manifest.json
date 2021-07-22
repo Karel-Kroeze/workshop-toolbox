@@ -1,7 +1,7 @@
 {
-    "name": "Steam Workshop Toolbox XXX",
-    "version": "0.3",
-    "description": "Create GitHub issues from Steam Workshop comments",
+    "name": "Workshop Toolbox",
+    "version": "0.0.2",
+    "description": "Toolbox for Steam Workshop modders. Create issues, quick replies and more straight from the workshop page.",
     "background": {
         "scripts": ["background.js"],
         "persistent": false
@@ -19,5 +19,6 @@
     "options_page": "options.html",
     "permissions": ["storage", "identity"],
     "web_accessible_resources": ["icons/github-inv.png", "icons/reply.png"],
-    "manifest_version": 2
+    "manifest_version": 2,
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnY9LUhyzweAgViGYFdEHqtH1g51/D3jDF9gAiFbXSgNoPm6FrdyF9MvBUMOlzRSPFGNBv8+DH5yHe/SYqFve68iQ2uHNm+2aUa5obcCP0GIy1S+ypYAZyfxRfw40pVzWK/lgkQxXDVO7RHiV/tC6ulnghnfMzd8Gm7Xu5Ctk4G6ZhSBUvn3Mcg1c2MvhxyTC2Jlpi4xVvszP9ThjyfeGVc0Ndr9oUUeL5LISV8gHOWcwyIdUMsqC6Dosx+QP4VleBh3zppQcARHZcAuEUQD9e7ioK/UBPXcoF8oKw/FEkQ+59ywiqk1GpgxgxRvTWqJJi4vO0oJA8agqblNIOO0NXQIDAQAB"
 }

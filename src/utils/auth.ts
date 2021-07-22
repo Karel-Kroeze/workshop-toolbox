@@ -1,9 +1,9 @@
-import { browser } from 'webextension-polyfill-ts';
+import { browser } from "webextension-polyfill-ts";
 
-import { CLIENT_ID, PROXY_URL } from './config';
-import { getBearerInfo } from './github';
-import { setGitHubUser } from './storage';
-import { ERRORS, IGithubUser, IResponse } from './types';
+import { CLIENT_ID, PROXY_URL } from "./config";
+import { getBearerInfo } from "./github";
+import { setGitHubUser } from "./storage";
+import { ERRORS, IGithubUser, IResponse } from "./types";
 
 const AUTH_URL = "https://github.com/login/oauth/authorize";
 const SCOPES = ["public_repo", "read:user"];
